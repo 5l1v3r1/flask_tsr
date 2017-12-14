@@ -4,7 +4,7 @@
 import beebotte \
     , json
 
-class ManejadorBeebotte ():
+class Manejador ():
     """
     Clase para trabajar con Beebotte
     """
@@ -22,3 +22,11 @@ class ManejadorBeebotte ():
 
 
 
+    def escribir_datos (self):
+        """
+        Escribe los datos en el recurso 'nums' del módulo 'tsr'
+        """
+
+        res = beebotte.
+
+        pass
