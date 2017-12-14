@@ -13,7 +13,6 @@ class Manejador ():
         """
         Constructor
         """
-
         # Carga las claves del fichero API.keys y crea el cliente con ellas
         with open ("API.keys") as f:
             keys = json.load (f)
@@ -22,11 +21,25 @@ class Manejador ():
 
 
 
-    def escribir_datos (self):
+    def escribir (self, datos):
         """
-        Escribe los datos en el recurso 'nums' del módulo 'tsr'
+        Escribe los datos proporcionados en el recurso 'nums' del módulo 'tsr'
+
+        Args:
+            datos -> Objeto a escribir
         """
+        self.client.write ("tsr", "nums", datos)
 
-        res = beebotte.
+        print ("Datos escritos: {}".format (datos))
 
-        pass
+
+    def leer (self, limit = 3):
+        """
+        Lee los datos del recurso 'nums' del módulo 'tsr'
+
+        Args:
+            limit (opcional) -> Número máximo de elementos a devolver
+        """
+        elems = self.client.read ("tsr", "nums", limit = limit)
+
+        return elems
