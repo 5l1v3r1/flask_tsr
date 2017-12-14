@@ -2,3 +2,4 @@ Flask		>=	0.12.2
 apscheduler	>=	3.4.0
 beautifulsoup4	>=	4.6.0
 urllib3		>=	1.22
+beebotte	>=	0.5.0
