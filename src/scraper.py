@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import urllib3 \
-    , re
+####
+# Módulos propios
+####
+import db   \
+    , bbdd_iot
+
+
+####
+# Bibliotecas externas
+####
+
+import urllib3  \
+    , re        \
+    , logging
 
 from random import random
 from time import time
@@ -27,6 +39,9 @@ class Scraper ():
 
         self.nums = {}
         self.max_elems = max_elems
+
+        self.manejador_bbdd_iot = bbdd_iot.Manejador ()
+        self.manejador_db = db.Manejador ()
 
 
 
@@ -66,8 +81,35 @@ class Scraper ():
                         ]
                     )
 
-                timestamp = int (time ())
-                self.nums [ timestamp ] = float (elem)
-
+                self.guardar_dato (elem)
                 # Sólo obtiene el primer número (eso dice en el enunciado...)
                 break
+
+
+    def guardar_dato (self, num):
+        """
+        Guarda el dato especificado en las bases de datos, añadiendo la estampa de
+        tiempo (tal y como se especifica en el enunciado)
+
+        Args:
+            num -> Número a guardar en la base de datos
+        """
+        timestamp = int (time ())
+        self.nums [ str (timestamp) ] = float (num)
+
+        # Guarda los datos en las BBDD
+        self.manejador_db.guardar_dato (
+            {
+                str (timestamp): float (num)
+            }
+        )
+
+        self.manejador_bbdd_iot.escribir (
+            {
+                str (timestamp): float (num)
+            }
+        )
+
+        logging.getLogger (__name__).info (
+            "\n\t => Añadido número a las base de datos: {}\n".format (num)
+        )

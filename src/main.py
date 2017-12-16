@@ -51,9 +51,9 @@ if __name__ == '__main__':
 
     logging.basicConfig (level = logging.INFO)
 
-    logger = logging.getLogger (name = "TSR_GP5")
+    logger = logging.getLogger (name = __name__)
 
-    logger.info ("Iniciando servidor...")
+    logger.info ("\n\t => Iniciando servidor...\n")
 
     # Establece los parámetros para ejecutar las tareas en segundo plano
     planificador.start ()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     # Ejecuta scraper.actualizar_datos
     planificador.add_job (
         func = scraper.actualizar_datos
-        , trigger = IntervalTrigger (minutes = 2)
+        , trigger = IntervalTrigger (seconds = 10)
         , id = "actualizar_datos"
         , name = "Actualización de los datos cada dos minutos"
         , replace_existing = True
@@ -69,6 +69,6 @@ if __name__ == '__main__':
 
     app.run (host = "0.0.0.0", port = 8000)
 
-    print ("Terminando tareas en segundo plano...")
+    logger.info ("\n\t => Terminando tareas en segundo plano...\n")
     planificador.shutdown (wait = True)
-    print ("Listo")
+    logger.info ("\n\t => Listo\n")

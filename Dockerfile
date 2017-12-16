@@ -1,4 +1,4 @@
-FROM alpine
+FROM ubuntu:xenial
 
 MAINTAINER Foo-Manroot
 
@@ -6,15 +6,15 @@ MAINTAINER Foo-Manroot
 ADD /src /TSR_GP5
 ADD /requirements.txt /requirements.txt
 
-# Update
-RUN apk add --update python3 py3-pip
+# Actualiza y instala las dependencias (MongoDB)
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -y python3 python3-pip mongodb-server
 
-# Install app dependencies
+# Instala las dependencias de Python
 RUN pip3 install -U -r /requirements.txt
 
-# Bundle app source
-#COPY simpleapp.py /src/simpleapp.py
-
+# Expone el puerto y ejecuta 'main.py'
 EXPOSE  8000
 WORKDIR /TSR_GP5
 

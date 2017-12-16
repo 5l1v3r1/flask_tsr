@@ -3,3 +3,5 @@ apscheduler	>=	3.4.0
 beautifulsoup4	>=	4.6.0
 urllib3		>=	1.22
 beebotte	>=	0.5.0
+pymongo		>=	3.6.0
+pip		>=	8.1.1

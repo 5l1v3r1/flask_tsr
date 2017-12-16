@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import beebotte \
-    , json
+    , json      \
+    , logging
 
 class Manejador ():
     """
@@ -30,7 +31,7 @@ class Manejador ():
         """
         self.client.write ("tsr", "nums", datos)
 
-        print ("Datos escritos: {}".format (datos))
+        logging.getLogger (__name__).info ("\n\t --> Datos guardados en Beebotte")
 
 
     def leer (self, limit = 3):
