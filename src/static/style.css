@@ -1,0 +1,30 @@
+* {
+	color: #c0c0c0;
+	background-color: #101010;
+}
+
+hr {
+	width: 70%;
+	margin-top: 2rem;
+}
+
+#nums
+, #umbral_form {
+	width: 70%;
+	margin: auto;
+	padding: 2px;
+	text-align: center;
+}
+
+
+#umbral_form {
+	text-align: center;
+}
+
+#umbral_form input {
+	text-align: center;
+}
+
+.info {
+	color: #f04040;
+}

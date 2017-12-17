@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>TSR-5</title>
+
+	<link	rel="stylesheet"
+			type="text/css"
+			charset="utf-8"
+			href="{{ url_for('static', filename='style.css') }}"
+	>
+</head>
+<body>
+
+	<form	action="/umbral"
+			method="post"
+			accept-charset="utf-8"
+			id="umbral_form"
+	>
+		Umbral:
+		<input	type="number"
+				step="any"
+				name="umbral"
+				id="umbral"
+				value="50"
+		/>
+		<input type="submit" value="send" />
+	</form>
+
+	<hr/>
+
+	<div id="nums">
+		<h2>Números almacenados:</h2>
+
+		{% if umbral %}
+			<div class="info" >
+				Aplicando el umbral: {{ umbral }}
+			</div>
+			<a href="/">Eliminar umbral</a>
+		{% endif %}
+
+		{% for k in nums %}
+			{% if umbral %}
+				{% if nums [k] <= umbral %}
+					{{ k }}: {{ nums [k] }}<br />
+				{% endif %}
+			{% else %}
+				{{ k }}: {{ nums [k] }}<br />
+			{% endif %}
+		{% endfor %}
+	</div>
+
+</body>
+</html>

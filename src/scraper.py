@@ -37,12 +37,46 @@ class Scraper ():
         """
         self.url = "http://www.numeroalazar.com.ar/"
 
-        self.nums = {}
         self.max_elems = max_elems
 
         self.manejador_bbdd_iot = bbdd_iot.Manejador ()
         self.manejador_db = db.Manejador ()
 
+        # Inicializa los elementos con lo guardado en las bases de datos
+        self.nums = self.leer_bbdd ()
+
+
+
+    def leer_bbdd (self):
+        datos = {}
+
+        # Primero lee la bbdd local, y luego Beebotte
+        for d in self.manejador_db.leer_datos ():
+            # Esto debería devolver diccionarios
+            if type (d) == dict:
+                for k in d:
+                    if (len (datos) < self.max_elems
+                        and
+                        k not in datos
+                    ):
+                        datos [k] = d [k]
+
+        for elem in self.manejador_bbdd_iot.leer (limit = self.max_elems):
+            # De nuevo, debería devolver diccionarios
+            if type (elem ['data']) == dict:
+                for d in elem ['data']:
+                    if (len (datos) < self.max_elems
+                        and
+                        k not in datos
+                    ):
+                        datos [k] = d [k]
+
+        if len (datos) > 0:
+            logging.getLogger (__name__).info (
+                "\n\t => Datos recuperados de las BBDD: {}".format (datos)
+            )
+
+        return datos
 
 
     def actualizar_datos (self):

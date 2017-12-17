@@ -11,7 +11,7 @@ from scraper import Scraper
 # Bibliotecas externas
 ####
 
-from flask import Flask
+import flask
 import time \
     , logging
 
@@ -21,12 +21,17 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 
 ###
-# VARIABLES GLOBALES
+# VARIABLES GLOBALES y cosas varias
 ###
+logging.basicConfig (level = logging.INFO)
 
-app = Flask (__name__)
+logging.getLogger (__name__).info ("\n\t => Iniciando servidor...\n")
+
+
+
+app = flask.Flask (__name__)
 planificador = BackgroundScheduler ()
-scraper = Scraper (max_elems = 3)
+scraper = Scraper (max_elems = 10)
 
 ###########################
 
@@ -34,9 +39,24 @@ scraper = Scraper (max_elems = 3)
 # MÉTODOS EXPUESTOS (ENDPOINTS)
 ####
 
+@app.route ("/umbral", methods = ["POST"])
+def cambiar_umbral ():
+
+    if not flask.request.form ['umbral']:
+        return "404, m8"
+
+    return flask.render_template ("index.html"
+                                , nums = scraper.nums
+                                , umbral = float (flask.request.form ["umbral"])
+    )
+
+
+
 @app.route ("/")
 def index ():
-    return str (scraper.nums)
+    return flask.render_template ("index.html"
+                                , nums = scraper.nums
+    )
 
 
 
@@ -48,12 +68,7 @@ def index ():
 
 if __name__ == '__main__':
 
-
-    logging.basicConfig (level = logging.INFO)
-
     logger = logging.getLogger (name = __name__)
-
-    logger.info ("\n\t => Iniciando servidor...\n")
 
     # Establece los parámetros para ejecutar las tareas en segundo plano
     planificador.start ()
