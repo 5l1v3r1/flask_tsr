@@ -12,8 +12,9 @@ from scraper import Scraper
 ####
 
 import flask
-import time \
-    , logging
+import time     \
+    , logging   \
+    , datetime
 
 # Para ejecutar las tareas en segundo plano
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -26,7 +27,6 @@ from apscheduler.triggers.interval import IntervalTrigger
 logging.basicConfig (level = logging.INFO)
 
 logging.getLogger (__name__).info ("\n\t => Iniciando servidor...\n")
-
 
 
 app = flask.Flask (__name__)
@@ -42,20 +42,43 @@ scraper = Scraper (max_elems = 10)
 @app.route ("/umbral", methods = ["POST"])
 def cambiar_umbral ():
 
-    if not flask.request.form ['umbral']:
+    if not flask.request.form ["umbral"]:
         return "404, m8"
 
+    umbral = float (flask.request.form ["umbral"])
+
+    func = lambda: scraper.leer_bbdd (umbral = float (umbral))
+
+
+    formatter = lambda x: datetime.datetime.fromtimestamp (
+                                int (x)
+                        ).strftime ("%Y/%d/%m %H:%M:%S")
+
+
     return flask.render_template ("index.html"
-                                , nums = scraper.nums
-                                , umbral = float (flask.request.form ["umbral"])
+                                , nums = scraper.leer_bbdd (umbral = umbral)
+                                , umbral = umbral
+                                , formatter = formatter
     )
 
+@app.route ("/media", methods = ["GET"])
+def calc_media ():
+
+    return flask.render_template ("index.html"
+                                , media = scraper.calc_media
+    )
 
 
 @app.route ("/")
 def index ():
+
+    formatter = lambda x: datetime.datetime.fromtimestamp (
+                                int (x)
+                        ).strftime ("%Y/%d/%m %H:%M:%S")
+
     return flask.render_template ("index.html"
                                 , nums = scraper.nums
+                                , formatter = formatter
     )
 
 
@@ -76,7 +99,7 @@ if __name__ == '__main__':
     # Ejecuta scraper.actualizar_datos
     planificador.add_job (
         func = scraper.actualizar_datos
-        , trigger = IntervalTrigger (seconds = 10)
+        , trigger = IntervalTrigger (minutes = 2)
         , id = "actualizar_datos"
         , name = "Actualización de los datos cada dos minutos"
         , replace_existing = True

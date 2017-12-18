@@ -12,8 +12,26 @@ hr {
 , #umbral_form {
 	width: 70%;
 	margin: auto;
-	padding: 2px;
+	padding: 5px;
 	text-align: center;
+}
+
+#obtener_media {
+	display: grid;
+	justify-content: center;
+}
+
+#media
+, #beebotte_dashboard {
+	display: grid;
+	justify-content: center;
+}
+
+#nums table {
+	display: grid;
+	justify-content: center;
+	border-collapse: separate;
+	border-spacing: 20px 5px;
 }
 
 

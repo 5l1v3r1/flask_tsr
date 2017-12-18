@@ -24,33 +24,59 @@
 				step="any"
 				name="umbral"
 				id="umbral"
-				value="50"
+				value="{{ umbral if umbral else 50.0 }}"
 		/>
 		<input type="submit" value="send" />
 	</form>
 
+	<a id="obtener_media"
+		href="/media"
+	>
+		Obtener la media
+	</a>
+
+	<a id="beebotte_dashboard"
+		href="https://beebotte.com/dash/6c8ba9d0-e113-11e7-8270-5d5f198d95f3"
+	>
+		Datos de Beebotte
+	</a>
+
 	<hr/>
 
-	<div id="nums">
-		<h2>Números almacenados:</h2>
+	{% if media %}
+		<div id="media">Media: {{ media () }}</div>
+	{% endif %}
 
-		{% if umbral %}
-			<div class="info" >
-				Aplicando el umbral: {{ umbral }}
-			</div>
-			<a href="/">Eliminar umbral</a>
-		{% endif %}
+	{% if nums %}
+		<div id="nums">
 
-		{% for k in nums %}
+			<h2>Números almacenados:</h2>
+
 			{% if umbral %}
-				{% if nums [k] <= umbral %}
-					{{ k }}: {{ nums [k] }}<br />
-				{% endif %}
-			{% else %}
-				{{ k }}: {{ nums [k] }}<br />
+				<div class="info" >
+					Aplicando el umbral: {{ umbral }}
+				</div>
+				<a href="/">Eliminar umbral</a>
 			{% endif %}
-		{% endfor %}
-	</div>
+
+			<br />
+
+			<table>
+				<tr>
+					<th>Fecha</th>
+					<th>Valor</th>
+				</tr>
+				{% for k in nums %}
+					<tr>
+						<td>
+						{{ formatter (k) }}
+						</td>
+						<td>{{ nums [k] }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	{% endif %}
 
 </body>
 </html>

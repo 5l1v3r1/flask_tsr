@@ -46,30 +46,52 @@ class Scraper ():
         self.nums = self.leer_bbdd ()
 
 
+    def leer_bbdd (self, umbral = None, max_elems = None):
+        """
+        Obtiene de las bases de datos todos los números, hasta un máximo de
+        self.max_elems
 
-    def leer_bbdd (self):
+        Args:
+            umbral (opcional) -> Límite superior para filtrar
+
+        Returns:
+            Un diccionario con todos los datos obtenidos
+        """
         datos = {}
+
+        if not max_elems:
+            max_elems = self.max_elems
+
 
         # Primero lee la bbdd local, y luego Beebotte
         for d in self.manejador_db.leer_datos ():
             # Esto debería devolver diccionarios
             if type (d) == dict:
                 for k in d:
-                    if (len (datos) < self.max_elems
+                    if (len (datos) < max_elems
                         and
                         k not in datos
                     ):
-                        datos [k] = d [k]
+                        if umbral:
+                            if d [k] >= umbral:
+                                datos [k] = d [k]
+                        else:
+                            datos [k] = d [k]
 
         for elem in self.manejador_bbdd_iot.leer (limit = self.max_elems):
+            d = elem ['data']
             # De nuevo, debería devolver diccionarios
-            if type (elem ['data']) == dict:
-                for d in elem ['data']:
-                    if (len (datos) < self.max_elems
+            if type (d) == dict:
+                for k in d:
+                    if (len (datos) < max_elems
                         and
                         k not in datos
                     ):
-                        datos [k] = d [k]
+                        if umbral:
+                            if d [k] >= umbral:
+                                datos [k] = d [k]
+                        else:
+                            datos [k] = d [k]
 
         if len (datos) > 0:
             logging.getLogger (__name__).info (
@@ -147,3 +169,29 @@ class Scraper ():
         logging.getLogger (__name__).info (
             "\n\t => Añadido número a las base de datos: {}\n".format (num)
         )
+
+
+
+    def calc_media (self):
+
+        acc = 0.
+        n = 0.
+
+        # Primero lee la bbdd local, y luego Beebotte
+        for d in self.manejador_db.leer_datos ():
+            # Esto debería devolver diccionarios
+            if type (d) == dict:
+                for k in d:
+                    acc += d [k]
+                    n += 1
+
+
+        for elem in self.manejador_bbdd_iot.leer (limit = self.max_elems):
+            d = elem ['data']
+            # De nuevo, debería devolver diccionarios
+            if type (d) == dict:
+                for k in d:
+                    acc += d [k]
+                    n += 1
+
+        return acc / n
