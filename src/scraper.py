@@ -63,6 +63,10 @@ class Scraper ():
             max_elems = self.max_elems
 
 
+        logging.getLogger (__name__).info (
+             "\n\t --> Leyendo MongoDB..."
+        )
+
         # Primero lee la bbdd local, y luego Beebotte
         for d in self.manejador_db.leer_datos ():
             # Esto debería devolver diccionarios
@@ -77,6 +81,10 @@ class Scraper ():
                                 datos [k] = d [k]
                         else:
                             datos [k] = d [k]
+
+        logging.getLogger (__name__).info (
+             "\n\t --> Leyendo Beebotte..."
+        )
 
         for elem in self.manejador_bbdd_iot.leer (limit = self.max_elems):
             d = elem ['data']
@@ -177,6 +185,10 @@ class Scraper ():
         acc = 0.
         n = 0.
 
+
+        logging.getLogger (__name__).info (
+             "\n\t --> Leyendo MongoDB..."
+        )
         # Primero lee la bbdd local, y luego Beebotte
         for d in self.manejador_db.leer_datos ():
             # Esto debería devolver diccionarios
@@ -185,7 +197,9 @@ class Scraper ():
                     acc += d [k]
                     n += 1
 
-
+        logging.getLogger (__name__).info (
+             "\n\t --> Leyendo Beebotte..."
+        )
         for elem in self.manejador_bbdd_iot.leer (limit = self.max_elems):
             d = elem ['data']
             # De nuevo, debería devolver diccionarios
